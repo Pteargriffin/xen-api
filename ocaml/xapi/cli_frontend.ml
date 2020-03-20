@@ -698,6 +698,15 @@ let rec cmdtable_data : (string*cmd_spec) list =
       flags=[ Neverforward ];
     };
 
+    "host-emergency-server-certificate-reset",
+    {
+      reqd=[];
+      optn=[];
+      help="Deletes the current TLS server certificate in the host and installs a new, self-signed one.";
+      implementation=No_fd_local_session Cli_operations.host_emergency_server_certificate_reset;
+      flags=[ Neverforward ];
+    };
+
     "host-management-reconfigure",
     {
       reqd=["pif-uuid"];

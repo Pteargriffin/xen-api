@@ -1171,6 +1171,24 @@ let install_server_certificate ~__context ~host ~certificate ~private_key ~certi
   (* sever all connections done with stunnel *)
   Xapi_mgmt_iface.reconfigure_stunnel ~__context
 
+let emergency_server_certificate_reset ~__context =
+  let generate_ssl_cert = "/opt/xensource/libexec/generate_ssl_cert" in
+
+  let args = [!Xapi_globs.xapissl_path; Helper_hostname.get_hostname ()] in
+  ignore @@ Forkhelpers.execute_command_get_output generate_ssl_cert args;
+
+  let self = Helpers.get_localhost ~__context in
+
+  (* Delete records of the server certificate in this host *)
+  Db.Certificate.get_all_records ~__context
+  |> List.filter_map (fun (reference, record) ->
+    if record.API.certificate_host = self then
+        Some reference
+    else
+        None
+    )
+  |> List.iter (fun self -> Db.Certificate.destroy ~__context ~self)
+
 (* CA-24856: detect non-homogeneous external-authentication config in pool *)
 let detect_nonhomogeneous_external_auth_in_host ~__context ~host =
 

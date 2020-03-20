@@ -2626,6 +2626,9 @@ module Forward = functor(Local: Custom_actions.CUSTOM_ACTIONS) -> struct
         raise (Api_errors.Server_error(Api_errors.internal_error,
           ["Generation of alerts for server certificate expiration failed."]))
 
+    let emergency_server_certificate_reset ~__context =
+      Local.Host.emergency_server_certificate_reset ~__context
+
     let attach_static_vdis ~__context ~host ~vdi_reason_map =
       info "Host.attach_static_vdis: host = '%s'; vdi/reason pairs = [ %s ]" (host_uuid ~__context host)
         (String.concat "; " (List.map (fun (a, b) ->  Ref.string_of a ^ "/" ^ b) vdi_reason_map));

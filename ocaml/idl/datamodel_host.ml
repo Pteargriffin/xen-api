@@ -979,6 +979,16 @@ let host_query_ha = call ~flags:[`Session]
       ~allowed_roles:_R_POOL_ADMIN
       ()
 
+  let emergency_server_certificate_reset = call
+      ~flags:[`Session]
+      ~in_oss_since:None
+      ~lifecycle:[Published, rel_stockholm, ""]
+      ~name:"emergency_server_certificate_reset"
+      ~doc:"Delete the current TLS server certificate and replace by a new, self-signed one. This should only be used with extreme care."
+      ~versioned_params: []
+      ~allowed_roles:_R_LOCAL_ROOT_ONLY
+      ()
+
   let get_server_certificate = call
       ~in_oss_since:None
       ~lifecycle:[Published, rel_george, ""; Changed, rel_inverness, "Now available to all RBAC roles."]
@@ -1402,6 +1412,7 @@ let host_query_ha = call ~flags:[`Session]
         certificate_sync;
         get_server_certificate;
         install_server_certificate;
+        emergency_server_certificate_reset;
         update_pool_secret;
         update_master;
         attach_static_vdis;
